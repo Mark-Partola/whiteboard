@@ -3,6 +3,11 @@ export interface IDimensions {
   height: number;
 }
 
+export interface IPoint {
+  x: number;
+  y: number;
+}
+
 export interface IOffset {
   dx: number;
   dy: number;

@@ -1,5 +1,5 @@
 import { boundClass } from "autobind-decorator";
-import { IOffset } from "./types/domain";
+import { IOffset, IPoint } from "./types/domain";
 import { BackgroundPatternLayer } from "./background-pattern-layer";
 import { Canvas } from "./renderer/CreateCanvas";
 import { Loop } from "./renderer/Loop";
@@ -64,7 +64,15 @@ const canvas = new Canvas({
   ...config.dimensions,
 });
 
+const tiles: IPoint[] = [
+  {
+    x: 0,
+    y: 0,
+  },
+];
+
 const loop = new Loop({
+  frames: 60,
   init: () => {
     backgroundPatternLayer.render();
 
@@ -87,15 +95,33 @@ const loop = new Loop({
       },
     });
   },
+  update: () => {
+    const nextTile = {
+      x: (config.offset.dx % config.dimensions.width) + config.dimensions.width,
+      y: 0,
+    };
+
+    const isTileExist = tiles.find(
+      (tile) => tile.x === nextTile.x && tile.y === nextTile.y
+    );
+
+    if (!isTileExist) {
+      tiles.push(nextTile);
+    }
+  },
   render: () => {
     canvas.clear();
-    canvas.ctx.drawImage(
-      backgroundPatternLayer.getCanvas(),
-      config.offset.dx,
-      config.offset.dy,
-      config.dimensions.width,
-      config.dimensions.height
-    );
+
+    tiles.forEach((position) => {
+      // console.log(position);
+      canvas.ctx.drawImage(
+        backgroundPatternLayer.getCanvas(),
+        position.x + config.offset.dx,
+        position.y + config.offset.dy,
+        config.dimensions.width + position.x,
+        config.dimensions.height + position.y
+      );
+    });
   },
 });
 

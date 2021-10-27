@@ -1,27 +1,51 @@
 export class Loop {
+  private time = 0;
+  private desiredFramesPerSecond: number;
+  private timePerFrame: number;
+
   public constructor(
-    private readonly hooks: {
+    private readonly params: {
+      frames?: number;
       update?: Function;
       render?: Function;
       init?: Function;
     }
   ) {
-    if (this.hooks.init) {
-      this.hooks.init();
+    this.desiredFramesPerSecond = this.params.frames || 60;
+    this.timePerFrame = 1000 / this.desiredFramesPerSecond;
+
+    if (this.params.init) {
+      this.params.init();
     }
   }
 
   public run() {
-    requestAnimationFrame(() => {
-      if (this.hooks.update) {
-        this.hooks.update();
+    this.tick();
+    this.loop();
+  }
+
+  private loop() {
+    requestAnimationFrame((elapsedTime) => {
+      const isNeedTick = elapsedTime - this.time < this.timePerFrame;
+
+      if (isNeedTick) {
+        return this.loop();
       }
 
-      if (this.hooks.render) {
-        this.hooks.render();
-      }
+      this.time = elapsedTime;
 
-      this.run();
+      this.tick();
+      this.loop();
     });
+  }
+
+  private tick() {
+    if (this.params.update) {
+      this.params.update();
+    }
+
+    if (this.params.render) {
+      this.params.render();
+    }
   }
 }
