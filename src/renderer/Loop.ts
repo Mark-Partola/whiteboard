@@ -1,7 +1,15 @@
 export class Loop {
   public constructor(
-    private readonly hooks: { update?: Function; render?: Function }
-  ) {}
+    private readonly hooks: {
+      update?: Function;
+      render?: Function;
+      init?: Function;
+    }
+  ) {
+    if (this.hooks.init) {
+      this.hooks.init();
+    }
+  }
 
   public run() {
     requestAnimationFrame(() => {

@@ -1,8 +1,8 @@
 export class Canvas {
   private width: number = 0;
   private height: number = 0;
+  private canvas: HTMLCanvasElement;
 
-  public canvas: HTMLCanvasElement;
   public ctx: CanvasRenderingContext2D;
 
   public constructor(params: {
@@ -39,5 +39,9 @@ export class Canvas {
 
   public clear() {
     this.ctx.clearRect(0, 0, this.width, this.height);
+  }
+
+  public getCanvas() {
+    return this.canvas;
   }
 }
