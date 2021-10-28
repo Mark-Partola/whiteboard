@@ -2,33 +2,32 @@ import { Canvas } from "../renderer/CreateCanvas";
 import { IDimensions } from "../types/domain";
 
 export class BackgroundPatternLayer {
-  private dimensions: IDimensions;
   private canvas: Canvas;
+  private squareSize = 10;
+  private squaresCountX: number = 0;
+  private squaresCountY: number = 0;
 
   public constructor(params: { dimensions: IDimensions }) {
-    this.dimensions = params.dimensions;
     this.canvas = new Canvas(params.dimensions);
+
+    this.defineSquaresCount(params.dimensions);
   }
 
   public update(params: { dimensions: IDimensions }) {
-    this.dimensions = params.dimensions;
+    this.defineSquaresCount(params.dimensions);
+
     this.canvas.resize(params.dimensions);
   }
 
   public render() {
     this.canvas.clear();
 
-    const squareSize = 10;
-
-    const squaresCountX = Math.floor(this.dimensions.width / squareSize);
-    const squaresCountY = Math.floor(this.dimensions.height / squareSize);
-
-    for (let i = 0; i < squaresCountX; i++) {
-      for (let j = 0; j < squaresCountY; j++) {
-        const xOffset = squareSize * i;
-        const yOffset = squareSize * j;
-        const xOffsetWithSide = xOffset + squareSize;
-        const yOffsetWithSide = yOffset + squareSize;
+    for (let i = 0; i < this.squaresCountX; i++) {
+      for (let j = 0; j < this.squaresCountY; j++) {
+        const xOffset = this.squareSize * i;
+        const yOffset = this.squareSize * j;
+        const xOffsetWithSide = xOffset + this.squareSize;
+        const yOffsetWithSide = yOffset + this.squareSize;
 
         this.canvas.ctx.moveTo(xOffset, yOffset);
         this.canvas.ctx.lineTo(xOffsetWithSide, yOffset);
@@ -44,5 +43,10 @@ export class BackgroundPatternLayer {
 
   public getCanvas() {
     return this.canvas.getCanvas();
+  }
+
+  private defineSquaresCount(dimensions: IDimensions) {
+    this.squaresCountX = Math.ceil(dimensions.width / this.squareSize);
+    this.squaresCountY = Math.ceil(dimensions.height / this.squareSize);
   }
 }

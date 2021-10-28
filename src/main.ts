@@ -2,6 +2,7 @@ import { boundClass } from "autobind-decorator";
 import { IOffset, IPoint } from "./types/domain";
 import { BackgroundPatternLayer } from "./background-pattern-layer";
 import { Canvas } from "./renderer/CreateCanvas";
+import { Camera } from "./camera/Camera";
 import { Loop } from "./renderer/Loop";
 
 import "./style.css";
@@ -44,24 +45,24 @@ class DragAndDrop {
   }
 }
 
-const config = {
+const camera = new Camera({
   dimensions: {
     width: window.innerWidth,
     height: window.innerHeight,
   },
-  offset: {
-    dx: 0,
-    dy: 0,
+  position: {
+    x: 0,
+    y: 0,
   },
-};
+});
 
 const backgroundPatternLayer = new BackgroundPatternLayer({
-  dimensions: config.dimensions,
+  dimensions: camera.dimensions,
 });
 
 const canvas = new Canvas({
   root: document.body,
-  ...config.dimensions,
+  ...camera.dimensions,
 });
 
 const tiles: IPoint[] = [
@@ -72,12 +73,11 @@ const tiles: IPoint[] = [
 ];
 
 const loop = new Loop({
-  frames: 60,
   init: () => {
     backgroundPatternLayer.render();
 
     window.addEventListener("resize", () => {
-      const dimensions = (config.dimensions = {
+      const dimensions = (camera.dimensions = {
         width: window.innerWidth,
         height: window.innerHeight,
       });
@@ -89,37 +89,78 @@ const loop = new Loop({
     });
 
     new DragAndDrop({
-      onMove(offset) {
-        config.offset.dx += offset.dx;
-        config.offset.dy += offset.dy;
-      },
+      onMove: (offset) => camera.moveBy(offset),
     });
   },
   update: () => {
-    const nextTile = {
-      x: (config.offset.dx % config.dimensions.width) + config.dimensions.width,
-      y: 0,
+    const calcTilesIndex = (params: {
+      cameraOffset: number;
+      tileSize: number;
+    }) => {
+      const absIntersection = Math.abs(params.cameraOffset) / params.tileSize;
+      const absIndex = Math.ceil(absIntersection);
+
+      const sign = Math.sign(params.cameraOffset);
+
+      if (absIndex === 0) {
+        return absIndex;
+      }
+
+      return sign > 0 ? absIndex - 1 : -absIndex;
     };
 
-    const isTileExist = tiles.find(
-      (tile) => tile.x === nextTile.x && tile.y === nextTile.y
-    );
+    const tileWidth = camera.dimensions.width;
+    const tileHeight = camera.dimensions.height;
 
-    if (!isTileExist) {
-      tiles.push(nextTile);
+    const leftMostTileIndex = calcTilesIndex({
+      cameraOffset: camera.position.x,
+      tileSize: tileWidth,
+    });
+
+    const rightMostTileIndex = calcTilesIndex({
+      cameraOffset: camera.position.x + camera.dimensions.width,
+      tileSize: tileWidth,
+    });
+
+    const topMostTileIndex = calcTilesIndex({
+      cameraOffset: camera.position.y,
+      tileSize: tileHeight,
+    });
+
+    const bottomMostTileIndex = calcTilesIndex({
+      cameraOffset: camera.position.y + camera.dimensions.height,
+      tileSize: tileHeight,
+    });
+
+    const nextTiles: IPoint[] = [];
+    for (let x = leftMostTileIndex; x <= rightMostTileIndex; x++) {
+      for (let y = topMostTileIndex; y <= bottomMostTileIndex; y++) {
+        nextTiles.push({ x: x * tileWidth, y: y * tileHeight });
+      }
     }
+
+    console.log(nextTiles);
+
+    nextTiles.forEach((nextTile) => {
+      const isTileExist = tiles.find(
+        (tile) => tile.x === nextTile.x && tile.y === nextTile.y
+      );
+
+      if (!isTileExist) {
+        tiles.push(nextTile);
+      }
+    });
   },
   render: () => {
     canvas.clear();
 
     tiles.forEach((position) => {
-      // console.log(position);
       canvas.ctx.drawImage(
         backgroundPatternLayer.getCanvas(),
-        position.x + config.offset.dx,
-        position.y + config.offset.dy,
-        config.dimensions.width + position.x,
-        config.dimensions.height + position.y
+        position.x - camera.position.x,
+        position.y - camera.position.y,
+        camera.dimensions.width,
+        camera.dimensions.height
       );
     });
   },
