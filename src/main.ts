@@ -92,9 +92,11 @@ const loop = new Loop({
         tiles.push(nextTile);
       }
     });
+
+    canvas.update({ tiles });
   },
   render: () => {
-    canvas.render(tiles);
+    canvas.render();
   },
 });
 

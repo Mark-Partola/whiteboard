@@ -1,11 +1,16 @@
 import { Camera } from "../camera/Camera";
 import { BackgroundPatternLayer } from "../background-pattern-layer";
 import { Canvas } from "../renderer/Canvas";
-import { IDimensions, IPoint } from "../types/domain";
+import { IComponent, IDimensions, IPoint } from "../types/domain";
 
-export class AppLayer {
+export interface IAppLayerUpdateParams {
+  tiles: IPoint[];
+}
+
+export class AppLayer implements IComponent<IAppLayerUpdateParams> {
   private canvas: Canvas;
   private camera: Camera;
+  private tiles: IPoint[] = [];
   private backgroundPatternLayer: BackgroundPatternLayer;
 
   public constructor(params: { camera: Camera }) {
@@ -43,10 +48,14 @@ export class AppLayer {
     });
   }
 
-  public render(tiles: IPoint[]) {
+  public update(params: IAppLayerUpdateParams) {
+    this.tiles = params.tiles;
+  }
+
+  public render() {
     this.canvas.clear();
 
-    tiles.forEach((position) => {
+    this.tiles.forEach((position) => {
       this.canvas.ctx.drawImage(
         this.backgroundPatternLayer.getCanvas(),
         position.x - this.camera.position.x,
