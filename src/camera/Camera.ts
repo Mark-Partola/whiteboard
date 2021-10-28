@@ -1,3 +1,4 @@
+import { DragAndDrop } from "../interaction/DragAndDrop";
 import { IDimensions, IOffset, IPoint } from "../types/domain";
 
 export interface ICameraParams {
@@ -6,7 +7,11 @@ export interface ICameraParams {
 }
 
 export class Camera {
-  public constructor(private readonly params: ICameraParams) {}
+  public constructor(private readonly params: ICameraParams) {
+    new DragAndDrop({
+      onMove: (offset) => this.moveBy(offset),
+    });
+  }
 
   public moveTo(point: Readonly<IPoint>) {
     this.params.position = point;

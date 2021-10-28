@@ -1,5 +1,4 @@
 import { Camera } from "../camera/Camera";
-import { BackgroundPatternLayer } from "../background-pattern-layer";
 import { Canvas } from "../renderer/Canvas";
 import { IComponent, IDimensions, IPoint } from "../types/domain";
 
@@ -11,10 +10,12 @@ export class AppLayer implements IComponent<IAppLayerUpdateParams> {
   private canvas: Canvas;
   private camera: Camera;
   private tiles: IPoint[] = [];
-  private backgroundPatternLayer: BackgroundPatternLayer;
+  private pattern: HTMLCanvasElement;
 
-  public constructor(params: { camera: Camera }) {
+  public constructor(params: { camera: Camera; pattern: HTMLCanvasElement }) {
     this.camera = params.camera;
+    this.pattern = params.pattern;
+
     this.canvas = new Canvas({
       root: document.body,
       dimensions: {
@@ -22,30 +23,10 @@ export class AppLayer implements IComponent<IAppLayerUpdateParams> {
         height: window.innerHeight,
       },
     });
-
-    this.backgroundPatternLayer = new BackgroundPatternLayer({
-      dimensions: this.camera.dimensions,
-    });
   }
 
   public resize(dimensions: Readonly<IDimensions>) {
     this.canvas.resize(dimensions);
-  }
-
-  public init() {
-    this.backgroundPatternLayer.render();
-
-    window.addEventListener("resize", () => {
-      const dimensions = (this.camera.dimensions = {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-
-      this.resize(dimensions);
-
-      this.backgroundPatternLayer.update({ dimensions });
-      this.backgroundPatternLayer.render();
-    });
   }
 
   public update(params: IAppLayerUpdateParams) {
@@ -57,7 +38,7 @@ export class AppLayer implements IComponent<IAppLayerUpdateParams> {
 
     this.tiles.forEach((position) => {
       this.canvas.ctx.drawImage(
-        this.backgroundPatternLayer.getCanvas(),
+        this.pattern,
         position.x - this.camera.position.x,
         position.y - this.camera.position.y,
         this.camera.dimensions.width,
