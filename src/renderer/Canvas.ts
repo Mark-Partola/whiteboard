@@ -1,3 +1,5 @@
+import { IDimensions } from "../types/domain";
+
 export class Canvas {
   private width: number = 0;
   private height: number = 0;
@@ -6,16 +8,15 @@ export class Canvas {
   public ctx: CanvasRenderingContext2D;
 
   public constructor(params: {
-    width: number;
-    height: number;
+    dimensions: Readonly<IDimensions>;
     root?: HTMLElement;
   }) {
     this.canvas = document.createElement("canvas");
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
     this.resize({
-      width: params.width,
-      height: params.height,
+      width: params.dimensions.width,
+      height: params.dimensions.height,
     });
 
     if (params.root) {

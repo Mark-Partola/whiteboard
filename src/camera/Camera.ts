@@ -1,20 +1,22 @@
 import { IDimensions, IOffset, IPoint } from "../types/domain";
 
 export interface ICameraParams {
-  dimensions: IDimensions;
-  position: IPoint;
+  dimensions: Readonly<IDimensions>;
+  position: Readonly<IPoint>;
 }
 
 export class Camera {
   public constructor(private readonly params: ICameraParams) {}
 
-  public moveTo(point: IPoint) {
+  public moveTo(point: Readonly<IPoint>) {
     this.params.position = point;
   }
 
-  public moveBy(offset: IOffset) {
-    this.params.position.x -= offset.dx;
-    this.params.position.y -= offset.dy;
+  public moveBy(offset: Readonly<IOffset>) {
+    this.params.position = {
+      x: this.params.position.x - offset.dx,
+      y: this.params.position.y - offset.dy,
+    };
   }
 
   public set dimensions(dimensions: IDimensions) {

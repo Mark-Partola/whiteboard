@@ -1,4 +1,4 @@
-import { Canvas } from "../renderer/CreateCanvas";
+import { Canvas } from "../renderer/Canvas";
 import { IDimensions } from "../types/domain";
 
 export class BackgroundPatternLayer {
@@ -7,8 +7,8 @@ export class BackgroundPatternLayer {
   private squaresCountX: number = 0;
   private squaresCountY: number = 0;
 
-  public constructor(params: { dimensions: IDimensions }) {
-    this.canvas = new Canvas(params.dimensions);
+  public constructor(params: { dimensions: Readonly<IDimensions> }) {
+    this.canvas = new Canvas({ dimensions: params.dimensions });
 
     this.defineSquaresCount(params.dimensions);
   }

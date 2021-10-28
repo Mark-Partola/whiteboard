@@ -1,49 +1,10 @@
-import { boundClass } from "autobind-decorator";
-import { IOffset, IPoint } from "./types/domain";
-import { BackgroundPatternLayer } from "./background-pattern-layer";
-import { Canvas } from "./renderer/CreateCanvas";
+import { IPoint } from "./types/domain";
 import { Camera } from "./camera/Camera";
 import { Loop } from "./renderer/Loop";
+import { DragAndDrop } from "./interaction/DragAndDrop";
+import { AppLayer } from "./app-layer";
 
 import "./style.css";
-
-@boundClass
-class DragAndDrop {
-  private startX: number = 0;
-  private startY: number = 0;
-
-  public constructor(
-    private readonly params: {
-      onMove: (delta: IOffset) => void;
-    }
-  ) {
-    document.addEventListener("mousedown", this.handleMouseDown);
-  }
-
-  private handleMouseDown(event: MouseEvent) {
-    this.startX = event.pageX;
-    this.startY = event.pageY;
-
-    document.addEventListener("mousemove", this.handleMouseMove);
-    document.addEventListener("mouseup", this.handleMouseUp);
-  }
-
-  private handleMouseMove(event: MouseEvent) {
-    const { pageX, pageY } = event;
-    const dx = pageX - this.startX;
-    const dy = pageY - this.startY;
-
-    this.startX = pageX;
-    this.startY = pageY;
-
-    this.params.onMove({ dx, dy });
-  }
-
-  private handleMouseUp() {
-    document.removeEventListener("mousemove", this.handleMouseMove);
-    document.removeEventListener("mouseup", this.handleMouseUp);
-  }
-}
 
 const camera = new Camera({
   dimensions: {
@@ -56,15 +17,6 @@ const camera = new Camera({
   },
 });
 
-const backgroundPatternLayer = new BackgroundPatternLayer({
-  dimensions: camera.dimensions,
-});
-
-const canvas = new Canvas({
-  root: document.body,
-  ...camera.dimensions,
-});
-
 const tiles: IPoint[] = [
   {
     x: 0,
@@ -72,21 +24,13 @@ const tiles: IPoint[] = [
   },
 ];
 
+const canvas = new AppLayer({
+  camera,
+});
+
 const loop = new Loop({
   init: () => {
-    backgroundPatternLayer.render();
-
-    window.addEventListener("resize", () => {
-      const dimensions = (camera.dimensions = {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-
-      backgroundPatternLayer.update({ dimensions });
-      canvas.resize(dimensions);
-
-      backgroundPatternLayer.render();
-    });
+    canvas.init();
 
     new DragAndDrop({
       onMove: (offset) => camera.moveBy(offset),
@@ -139,8 +83,6 @@ const loop = new Loop({
       }
     }
 
-    console.log(nextTiles);
-
     nextTiles.forEach((nextTile) => {
       const isTileExist = tiles.find(
         (tile) => tile.x === nextTile.x && tile.y === nextTile.y
@@ -152,17 +94,7 @@ const loop = new Loop({
     });
   },
   render: () => {
-    canvas.clear();
-
-    tiles.forEach((position) => {
-      canvas.ctx.drawImage(
-        backgroundPatternLayer.getCanvas(),
-        position.x - camera.position.x,
-        position.y - camera.position.y,
-        camera.dimensions.width,
-        camera.dimensions.height
-      );
-    });
+    canvas.render(tiles);
   },
 });
 
