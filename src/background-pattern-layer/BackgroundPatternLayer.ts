@@ -1,13 +1,7 @@
 import { Canvas } from "../renderer/Canvas";
 import { IComponent, IDimensions } from "../types/domain";
 
-export interface IBackgroundPatternLayerUpdateParams {
-  dimensions: IDimensions;
-}
-
-export class BackgroundPatternLayer
-  implements IComponent<IBackgroundPatternLayerUpdateParams>
-{
+export class BackgroundPatternLayer implements IComponent {
   private canvas: Canvas;
   private squareSize = 10;
   private squaresCountX: number = 0;
@@ -20,12 +14,7 @@ export class BackgroundPatternLayer
   public constructor() {
     this.canvas = new Canvas({ dimensions: this.dimensions });
     this.defineSquaresCount(this.dimensions);
-  }
-
-  public update(params: IBackgroundPatternLayerUpdateParams) {
-    this.defineSquaresCount(params.dimensions);
-
-    this.canvas.resize(params.dimensions);
+    this.render();
   }
 
   public render() {

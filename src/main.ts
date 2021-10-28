@@ -37,8 +37,6 @@ const app = new AppLayer({
 
 const loop = new Loop({
   init: () => {
-    backgroundPatternLayer.render();
-
     window.addEventListener("resize", () => {
       const dimensions = (config.container.dimensions = {
         width: window.innerWidth,
@@ -49,9 +47,6 @@ const loop = new Loop({
 
       app.resize(dimensions);
       backgroundTiles.resize({ dimensions });
-
-      backgroundPatternLayer.update({ dimensions });
-      backgroundPatternLayer.render();
     });
   },
   update: () => {
