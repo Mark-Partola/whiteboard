@@ -24,17 +24,20 @@ const camera = new Camera({
 });
 
 const backgroundPatternLayer = new BackgroundPatternLayer({
-  dimensions: camera.dimensions,
+  dimensions: {
+    width: 100,
+    height: 100,
+  },
+});
+
+const backgroundTiles = new BackgroundTiles({
+  dimensions: backgroundPatternLayer.getDimensions(),
+  camera,
 });
 
 const app = new AppLayer({
   camera,
   pattern: backgroundPatternLayer.getCanvas(),
-});
-
-const backgroundTiles = new BackgroundTiles({
-  dimensions: config.container.dimensions,
-  camera,
 });
 
 const loop = new Loop({
@@ -50,6 +53,7 @@ const loop = new Loop({
       camera.dimensions = dimensions;
 
       app.resize(dimensions);
+      backgroundTiles.resize({ dimensions });
 
       backgroundPatternLayer.update({ dimensions });
       backgroundPatternLayer.render();
@@ -57,6 +61,7 @@ const loop = new Loop({
   },
   update: () => {
     backgroundTiles.update();
+    console.log(backgroundTiles.getTiles());
     app.update({ tiles: backgroundTiles.getTiles() });
   },
   render: () => {

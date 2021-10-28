@@ -13,7 +13,9 @@ export class BackgroundPatternLayer
   private squaresCountX: number = 0;
   private squaresCountY: number = 0;
 
-  public constructor(params: { dimensions: Readonly<IDimensions> }) {
+  public constructor(
+    private readonly params: { dimensions: Readonly<IDimensions> }
+  ) {
     this.canvas = new Canvas({ dimensions: params.dimensions });
 
     this.defineSquaresCount(params.dimensions);
@@ -49,6 +51,10 @@ export class BackgroundPatternLayer
 
   public getCanvas() {
     return this.canvas.getCanvas();
+  }
+
+  public getDimensions() {
+    return this.params.dimensions;
   }
 
   private defineSquaresCount(dimensions: IDimensions) {

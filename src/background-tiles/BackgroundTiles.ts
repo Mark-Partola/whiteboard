@@ -66,6 +66,11 @@ export class BackgroundTiles {
     return this.tiles;
   }
 
+  public resize(params: { dimensions: Readonly<IDimensions> }) {
+    this.params.dimensions = params.dimensions;
+    this.tiles = [];
+  }
+
   private calcTilesIndex(params: { cameraOffset: number; tileSize: number }) {
     const absIntersection = Math.abs(params.cameraOffset) / params.tileSize;
     const absIndex = Math.ceil(absIntersection);

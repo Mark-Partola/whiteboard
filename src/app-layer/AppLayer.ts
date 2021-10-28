@@ -10,9 +10,12 @@ export class AppLayer implements IComponent<IAppLayerUpdateParams> {
   private canvas: Canvas;
   private camera: Camera;
   private tiles: IPoint[] = [];
-  private pattern: HTMLCanvasElement;
+  private pattern: HTMLCanvasElement | HTMLImageElement;
 
-  public constructor(params: { camera: Camera; pattern: HTMLCanvasElement }) {
+  public constructor(params: {
+    camera: Camera;
+    pattern: HTMLCanvasElement | HTMLImageElement;
+  }) {
     this.camera = params.camera;
     this.pattern = params.pattern;
 
@@ -36,13 +39,27 @@ export class AppLayer implements IComponent<IAppLayerUpdateParams> {
   public render() {
     this.canvas.clear();
 
+    const dimensions = (() => {
+      if (this.pattern instanceof HTMLCanvasElement) {
+        return {
+          width: parseInt(this.pattern.style.width),
+          height: parseInt(this.pattern.style.height),
+        };
+      } else {
+        return {
+          width: this.pattern.width,
+          height: this.pattern.height,
+        };
+      }
+    })();
+
     this.tiles.forEach((position) => {
       this.canvas.ctx.drawImage(
         this.pattern,
         position.x - this.camera.position.x,
         position.y - this.camera.position.y,
-        this.camera.dimensions.width,
-        this.camera.dimensions.height
+        dimensions.width,
+        dimensions.height
       );
     });
   }
