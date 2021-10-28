@@ -23,12 +23,7 @@ const camera = new Camera({
   },
 });
 
-const backgroundPatternLayer = new BackgroundPatternLayer({
-  dimensions: {
-    width: 100,
-    height: 100,
-  },
-});
+const backgroundPatternLayer = new BackgroundPatternLayer();
 
 const backgroundTiles = new BackgroundTiles({
   dimensions: backgroundPatternLayer.getDimensions(),

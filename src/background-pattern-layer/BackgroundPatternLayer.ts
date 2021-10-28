@@ -12,13 +12,14 @@ export class BackgroundPatternLayer
   private squareSize = 10;
   private squaresCountX: number = 0;
   private squaresCountY: number = 0;
+  private dimensions: IDimensions = {
+    width: 100,
+    height: 100,
+  };
 
-  public constructor(
-    private readonly params: { dimensions: Readonly<IDimensions> }
-  ) {
-    this.canvas = new Canvas({ dimensions: params.dimensions });
-
-    this.defineSquaresCount(params.dimensions);
+  public constructor() {
+    this.canvas = new Canvas({ dimensions: this.dimensions });
+    this.defineSquaresCount(this.dimensions);
   }
 
   public update(params: IBackgroundPatternLayerUpdateParams) {
@@ -54,7 +55,7 @@ export class BackgroundPatternLayer
   }
 
   public getDimensions() {
-    return this.params.dimensions;
+    return this.dimensions;
   }
 
   private defineSquaresCount(dimensions: IDimensions) {
