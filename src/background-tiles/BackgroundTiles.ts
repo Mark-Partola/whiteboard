@@ -58,8 +58,6 @@ export class BackgroundTiles {
         this.tiles.push(nextTile);
       }
     });
-
-    console.log(this.tiles);
   }
 
   public getTiles() {

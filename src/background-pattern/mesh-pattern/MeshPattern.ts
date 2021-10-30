@@ -1,7 +1,7 @@
-import { Canvas } from "../renderer/Canvas";
-import { IComponent, IDimensions } from "../types/domain";
+import { Canvas } from "../../renderer/Canvas";
+import { IComponent, IDimensions } from "../../types/domain";
 
-export class BackgroundPatternLayer implements IComponent {
+export class MeshPattern implements IComponent {
   private canvas: Canvas;
   private squareSize = 10;
   private squaresCountX: number = 0;

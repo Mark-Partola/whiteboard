@@ -1,23 +1,12 @@
-import { Camera } from "../camera/Camera";
 import { Canvas } from "../renderer/Canvas";
-import { IComponent, IDimensions, IPoint } from "../types/domain";
+import { IComponent, IDimensions } from "../types/domain";
 
-export interface IAppLayerUpdateParams {
-  tiles: IPoint[];
-}
-
-export class AppLayer implements IComponent<IAppLayerUpdateParams> {
+export class AppLayer implements IComponent {
   private canvas: Canvas;
-  private camera: Camera;
-  private tiles: IPoint[] = [];
-  private pattern: HTMLCanvasElement | HTMLImageElement;
+  private components: IComponent[];
 
-  public constructor(params: {
-    camera: Camera;
-    pattern: HTMLCanvasElement | HTMLImageElement;
-  }) {
-    this.camera = params.camera;
-    this.pattern = params.pattern;
+  public constructor(params: { components: IComponent[] }) {
+    this.components = params.components;
 
     this.canvas = new Canvas({
       root: document.body,
@@ -32,35 +21,18 @@ export class AppLayer implements IComponent<IAppLayerUpdateParams> {
     this.canvas.resize(dimensions);
   }
 
-  public update(params: IAppLayerUpdateParams) {
-    this.tiles = params.tiles;
+  public update() {
+    this.components.forEach((component) => {
+      if (component.update) {
+        component.update({});
+      }
+    });
   }
 
   public render() {
     this.canvas.clear();
-
-    const dimensions = (() => {
-      if (this.pattern instanceof HTMLCanvasElement) {
-        return {
-          width: parseInt(this.pattern.style.width),
-          height: parseInt(this.pattern.style.height),
-        };
-      } else {
-        return {
-          width: this.pattern.width,
-          height: this.pattern.height,
-        };
-      }
-    })();
-
-    this.tiles.forEach((position) => {
-      this.canvas.ctx.drawImage(
-        this.pattern,
-        position.x - this.camera.position.x,
-        position.y - this.camera.position.y,
-        dimensions.width,
-        dimensions.height
-      );
+    this.components.forEach((component) => {
+      component.render(this.canvas.ctx);
     });
   }
 }

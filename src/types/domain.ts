@@ -1,5 +1,5 @@
 export interface IComponent<TUpdate extends object = {}> {
-  render: () => void;
+  render: (ctx: CanvasRenderingContext2D) => void;
   update?: (params: TUpdate) => void;
   init?: () => void;
 }

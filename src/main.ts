@@ -1,8 +1,7 @@
 import { Camera } from "./camera/Camera";
 import { Loop } from "./renderer/Loop";
 import { AppLayer } from "./app-layer";
-import { BackgroundTiles } from "./background-tiles";
-import { BackgroundPatternLayer } from "./background-pattern-layer";
+import { BackgroundPattern } from "./background-pattern";
 
 import "./style.css";
 
@@ -23,16 +22,12 @@ const camera = new Camera({
   },
 });
 
-const backgroundPatternLayer = new BackgroundPatternLayer();
-
-const backgroundTiles = new BackgroundTiles({
-  dimensions: backgroundPatternLayer.getDimensions(),
+const backgroundPattern = new BackgroundPattern({
   camera,
 });
 
 const app = new AppLayer({
-  camera,
-  pattern: backgroundPatternLayer.getCanvas(),
+  components: [backgroundPattern],
 });
 
 const loop = new Loop({
@@ -49,8 +44,7 @@ const loop = new Loop({
     });
   },
   update: () => {
-    backgroundTiles.update();
-    app.update({ tiles: backgroundTiles.getTiles() });
+    app.update();
   },
   render: () => {
     app.render();
