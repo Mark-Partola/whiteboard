@@ -1,7 +1,6 @@
 import { IComponent } from "../types/domain";
 import { Camera } from "../camera/Camera";
 import { BackgroundTiles } from "../background-tiles";
-import { MeshPattern } from "./mesh-pattern";
 import { IPattern } from "./types";
 
 export class BackgroundPattern implements IComponent {
@@ -9,9 +8,10 @@ export class BackgroundPattern implements IComponent {
   private pattern: IPattern;
   private backgroundTiles: BackgroundTiles;
 
-  public constructor(params: { camera: Camera }) {
+  public constructor(params: { camera: Camera; pattern: IPattern }) {
     this.camera = params.camera;
-    this.pattern = new MeshPattern();
+    this.pattern = params.pattern;
+
     this.backgroundTiles = new BackgroundTiles({
       dimensions: this.pattern.getDimensions(),
       camera: this.camera,

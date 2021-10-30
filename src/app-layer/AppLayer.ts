@@ -1,13 +1,15 @@
 import { Canvas } from "../renderer/Canvas";
 import { IComponent, IDimensions } from "../types/domain";
 
-export class AppLayer implements IComponent {
+export interface IAppLayerParams {
+  components: IComponent[];
+}
+
+export class AppLayer implements IComponent<IAppLayerParams> {
   private canvas: Canvas;
-  private components: IComponent[];
+  private components: IComponent[] = [];
 
-  public constructor(params: { components: IComponent[] }) {
-    this.components = params.components;
-
+  public constructor() {
     this.canvas = new Canvas({
       root: document.body,
       dimensions: {
@@ -21,7 +23,9 @@ export class AppLayer implements IComponent {
     this.canvas.resize(dimensions);
   }
 
-  public update() {
+  public update(params: IAppLayerParams) {
+    this.components = params.components;
+
     this.components.forEach((component) => {
       if (component.update) {
         component.update({});

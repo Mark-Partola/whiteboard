@@ -1,19 +1,20 @@
-import { IComponent } from "../../types/domain";
 import { IPattern } from "../types";
 
-export class ImagePattern implements IComponent, IPattern {
-  public constructor() {}
+export class ImagePattern implements IPattern {
+  private image: HTMLImageElement;
 
-  public render() {}
+  public constructor(params: { image: HTMLImageElement }) {
+    this.image = params.image;
+  }
 
   public getImage() {
-    return new Image();
+    return this.image;
   }
 
   public getDimensions() {
     return {
-      width: 0,
-      height: 0,
+      width: this.image.width,
+      height: this.image.height,
     };
   }
 }
