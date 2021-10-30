@@ -1,4 +1,5 @@
 import { DragAndDrop } from "../interaction/DragAndDrop";
+import { Scroll } from "../interaction/Scroll";
 import { IDimensions, IOffset, IPoint } from "../types/domain";
 
 export interface ICameraParams {
@@ -10,6 +11,10 @@ export class Camera {
   public constructor(private readonly params: ICameraParams) {
     new DragAndDrop({
       onMove: (offset) => this.moveBy(offset),
+    });
+
+    new Scroll({
+      onChange: console.log,
     });
   }
 
@@ -24,15 +29,15 @@ export class Camera {
     };
   }
 
-  public set dimensions(dimensions: IDimensions) {
+  public setDimensions(dimensions: IDimensions) {
     this.params.dimensions = dimensions;
   }
 
-  public get dimensions() {
+  public getDimensions() {
     return this.params.dimensions;
   }
 
-  public get position() {
+  public getPosition() {
     return this.params.position;
   }
 }

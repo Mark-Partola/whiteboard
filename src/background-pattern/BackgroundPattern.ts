@@ -26,12 +26,13 @@ export class BackgroundPattern implements IComponent {
     const dimensions = this.pattern.getDimensions();
     const pattern = this.pattern.getImage();
     const tiles = this.backgroundTiles.getTiles();
+    const cameraPosition = this.camera.getPosition();
 
     tiles.forEach((position) => {
       ctx.drawImage(
         pattern,
-        position.x - this.camera.position.x,
-        position.y - this.camera.position.y,
+        position.x - cameraPosition.x,
+        position.y - cameraPosition.y,
         dimensions.width,
         dimensions.height
       );

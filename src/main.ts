@@ -36,7 +36,7 @@ const loop = new Loop({
         height: window.innerHeight,
       });
 
-      camera.dimensions = dimensions;
+      camera.setDimensions(dimensions);
 
       app.resize(dimensions);
     });

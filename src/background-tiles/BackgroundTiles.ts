@@ -18,24 +18,26 @@ export class BackgroundTiles {
 
   public update() {
     const { camera, dimensions } = this.params;
+    const cameraPosition = camera.getPosition();
+    const cameraDimensions = camera.getDimensions();
 
     const leftMostTileIndex = this.calcTilesIndex({
-      cameraOffset: camera.position.x,
+      cameraOffset: cameraPosition.x,
       tileSize: dimensions.width,
     });
 
     const rightMostTileIndex = this.calcTilesIndex({
-      cameraOffset: camera.position.x + camera.dimensions.width,
+      cameraOffset: cameraPosition.x + cameraDimensions.width,
       tileSize: dimensions.width,
     });
 
     const topMostTileIndex = this.calcTilesIndex({
-      cameraOffset: camera.position.y,
+      cameraOffset: cameraPosition.y,
       tileSize: dimensions.height,
     });
 
     const bottomMostTileIndex = this.calcTilesIndex({
-      cameraOffset: camera.position.y + camera.dimensions.height,
+      cameraOffset: cameraPosition.y + cameraDimensions.height,
       tileSize: dimensions.height,
     });
 
