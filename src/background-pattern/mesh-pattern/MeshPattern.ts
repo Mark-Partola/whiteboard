@@ -1,8 +1,8 @@
 import { Canvas } from "../../renderer/Canvas";
-import { IComponent, IDimensions } from "../../types/domain";
+import { IDimensions } from "../../types/domain";
 import { IPattern } from "../types";
 
-export class MeshPattern implements IComponent, IPattern {
+export class MeshPattern implements IPattern {
   private canvas: Canvas;
   private squareSize = 10;
   private squaresCountX: number = 0;
@@ -18,7 +18,15 @@ export class MeshPattern implements IComponent, IPattern {
     this.render();
   }
 
-  public render() {
+  public getImage() {
+    return this.canvas.getCanvas();
+  }
+
+  public getDimensions() {
+    return this.dimensions;
+  }
+
+  private render() {
     this.canvas.clear();
 
     for (let i = 0; i < this.squaresCountX; i++) {
@@ -38,14 +46,6 @@ export class MeshPattern implements IComponent, IPattern {
     this.canvas.ctx.globalAlpha = 0.07;
     this.canvas.ctx.stroke();
     this.canvas.ctx.restore();
-  }
-
-  public getImage() {
-    return this.canvas.getCanvas();
-  }
-
-  public getDimensions() {
-    return this.dimensions;
   }
 
   private defineSquaresCount(dimensions: IDimensions) {
