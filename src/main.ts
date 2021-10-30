@@ -46,12 +46,10 @@ const loop = new Loop({
       camera.dimensions = dimensions;
 
       app.resize(dimensions);
-      backgroundTiles.resize({ dimensions });
     });
   },
   update: () => {
     backgroundTiles.update();
-    console.log(backgroundTiles.getTiles());
     app.update({ tiles: backgroundTiles.getTiles() });
   },
   render: () => {
