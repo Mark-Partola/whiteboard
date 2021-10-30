@@ -1,7 +1,8 @@
 import { Canvas } from "../../renderer/Canvas";
 import { IComponent, IDimensions } from "../../types/domain";
+import { IPattern } from "../types";
 
-export class MeshPattern implements IComponent {
+export class MeshPattern implements IComponent, IPattern {
   private canvas: Canvas;
   private squareSize = 10;
   private squaresCountX: number = 0;
@@ -39,7 +40,7 @@ export class MeshPattern implements IComponent {
     this.canvas.ctx.restore();
   }
 
-  public getCanvas() {
+  public getImage() {
     return this.canvas.getCanvas();
   }
 

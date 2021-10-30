@@ -2,10 +2,11 @@ import { IComponent } from "../types/domain";
 import { Camera } from "../camera/Camera";
 import { BackgroundTiles } from "../background-tiles";
 import { MeshPattern } from "./mesh-pattern";
+import { IPattern } from "./types";
 
 export class BackgroundPattern implements IComponent {
   private camera: Camera;
-  private pattern: MeshPattern;
+  private pattern: IPattern;
   private backgroundTiles: BackgroundTiles;
 
   public constructor(params: { camera: Camera }) {
@@ -23,7 +24,7 @@ export class BackgroundPattern implements IComponent {
 
   public render(ctx: CanvasRenderingContext2D) {
     const dimensions = this.pattern.getDimensions();
-    const pattern = this.pattern.getCanvas();
+    const pattern = this.pattern.getImage();
     const tiles = this.backgroundTiles.getTiles();
 
     tiles.forEach((position) => {
