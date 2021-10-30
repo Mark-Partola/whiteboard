@@ -25,6 +25,8 @@ const camera = new Camera({
   },
 });
 
+(window as any).camera = camera;
+
 const components: IComponent[] = [];
 const app = new AppLayer();
 

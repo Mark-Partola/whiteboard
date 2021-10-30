@@ -1,6 +1,7 @@
 import { boundClass } from "autobind-decorator";
 import { IOffset } from "../types/domain";
 
+// TODO: add IDisposable interface
 @boundClass
 export class DragAndDrop {
   private startX: number = 0;
