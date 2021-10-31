@@ -29,10 +29,6 @@ export class Camera {
     });
   }
 
-  public moveTo(point: Readonly<IPoint>): void {
-    this.position = point;
-  }
-
   public moveBy(offset: Readonly<IOffset>): void {
     this.position = {
       x: this.position.x - offset.dx,

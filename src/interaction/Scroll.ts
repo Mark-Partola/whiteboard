@@ -8,7 +8,6 @@ export interface IScrollParams {
 export class Scroll {
   public constructor(params: IScrollParams) {
     document.addEventListener("wheel", (event: WheelEvent) => {
-      console.log(event);
       params.onChange({
         delta: {
           dx: event.deltaX,
