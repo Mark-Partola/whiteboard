@@ -31,8 +31,8 @@ export class Camera {
 
   public moveBy(offset: Readonly<IOffset>): void {
     this.position = {
-      x: this.position.x - offset.dx,
-      y: this.position.y - offset.dy,
+      x: this.position.x - offset.dx / this.zoom,
+      y: this.position.y - offset.dy / this.zoom,
     };
   }
 
