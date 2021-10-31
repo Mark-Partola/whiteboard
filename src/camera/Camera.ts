@@ -21,8 +21,9 @@ export class Camera {
     });
 
     new Scroll({
-      onChange: (delta: IOffset) => {
-        this.zoom += delta.dy * -0.01;
+      onChange: (params) => {
+        const zoomDelta = params.delta.dy * -0.01;
+        this.zoom -= zoomDelta;
         this.zoom = Math.min(Math.max(0.125, this.zoom), 4);
       },
     });
@@ -51,7 +52,15 @@ export class Camera {
   }
 
   public getPosition(): IPoint {
-    return this.position;
+    const positionDeltaX =
+      (this.dimensions.width - this.dimensions.width / this.zoom) / 2;
+    const positionDeltaY =
+      (this.dimensions.height - this.dimensions.height / this.zoom) / 2;
+
+    return {
+      x: this.position.x + positionDeltaX,
+      y: this.position.y + positionDeltaY,
+    };
   }
 
   public getZoom(): number {

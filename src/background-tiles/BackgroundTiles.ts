@@ -21,8 +21,6 @@ export class BackgroundTiles {
     const cameraPosition = camera.getPosition();
     const cameraDimensions = camera.getDimensions();
 
-    console.log(cameraDimensions);
-
     const leftMostTileIndex = this.calcTilesIndex({
       cameraOffset: cameraPosition.x,
       tileSize: dimensions.width,
