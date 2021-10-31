@@ -17,6 +17,8 @@ export class BackgroundTiles {
   public constructor(private readonly params: IBackgroundTilesParams) {}
 
   public update() {
+    this.tiles = [];
+
     const { camera, dimensions } = this.params;
     const cameraPosition = camera.getPosition();
     const cameraDimensions = camera.getDimensions();
