@@ -7,12 +7,7 @@ export interface IBackgroundTilesParams {
 }
 
 export class BackgroundTiles {
-  private tiles: IPoint[] = [
-    {
-      x: 0,
-      y: 0,
-    },
-  ];
+  private tiles: IPoint[] = [];
 
   public constructor(private readonly params: IBackgroundTilesParams) {}
 
