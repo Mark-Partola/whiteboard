@@ -41,25 +41,14 @@ export class BackgroundTiles {
       tileSize: dimensions.height,
     });
 
-    const nextTiles: IPoint[] = [];
     for (let x = leftMostTileIndex; x <= rightMostTileIndex; x++) {
       for (let y = topMostTileIndex; y <= bottomMostTileIndex; y++) {
-        nextTiles.push({
+        this.tiles.push({
           x: x * this.params.dimensions.width,
           y: y * this.params.dimensions.height,
         });
       }
     }
-
-    nextTiles.forEach((nextTile) => {
-      const isTileExist = this.tiles.find(
-        (tile) => tile.x === nextTile.x && tile.y === nextTile.y
-      );
-
-      if (!isTileExist) {
-        this.tiles.push(nextTile);
-      }
-    });
   }
 
   public getTiles() {
